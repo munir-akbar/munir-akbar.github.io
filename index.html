@@ -1529,6 +1529,12 @@ section{ padding: 64px 0; position: relative; }
 
 /* Service info modal */
 .service-window{ max-width: 620px; position: relative; padding: 0; }
+.service-modal-content{
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+}
 .service-close{ position: absolute; top: 16px; right: 16px; z-index: 3; background: rgba(8,11,18,0.55); }
 .service-modal-hero{
   height: 130px;
@@ -1559,7 +1565,7 @@ section{ padding: 64px 0; position: relative; }
   color: #fff;
   box-shadow: 0 14px 34px -10px rgba(0,0,0,0.5);
 }
-.service-modal-body{ padding: 34px 36px 36px; overflow-y: auto; }
+.service-modal-body{ padding: 34px 36px 36px; overflow-y: auto; min-height: 0; flex: 1; }
 .service-modal-body h2{ font-size: 1.5rem; margin-bottom: 0.3em; }
 .service-modal-tagline{ font-size: 0.98rem; margin-bottom: 1.6em; }
 .service-modal-section{ margin-bottom: 24px; }
