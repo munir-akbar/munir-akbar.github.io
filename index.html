@@ -850,18 +850,35 @@ section{ padding: 64px 0; position: relative; }
   margin-top: 26px;
 }
 .skill-col{
+  /* min-width: 0 overrides the grid item's implicit min-width:auto,
+     which otherwise lets the marquee's full (unwrapped) content
+     width force this column — and the whole grid — to stretch
+     past the section. This is what caused the layout to blow out. */
+  min-width: 0;
   background: var(--card);
   border: 1px solid var(--card-border);
   border-radius: var(--radius-md);
   padding: 28px;
+  transition: border-color 0.3s var(--ease), transform 0.3s var(--ease);
 }
+.skill-col:hover{ border-color: rgba(0,217,255,0.3); transform: translateY(-3px); }
 .skill-col-title{
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 0.95rem;
   font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--accent-2);
-  margin-bottom: 18px;
+  margin-bottom: 20px;
+}
+.skill-col-title::before{
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  background: var(--grad);
+  flex-shrink: 0;
 }
 .chip-row{ display: flex; flex-wrap: wrap; gap: 8px; }
 .chip{
@@ -880,15 +897,19 @@ section{ padding: 64px 0; position: relative; }
   overflow: hidden;
   display: flex;
   width: 100%;
-  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  min-width: 0;
+  margin: 0 -28px;
+  padding: 0 28px;
+  mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
 }
 .chip-marquee-track{
   display: flex;
   gap: 8px;
   flex-shrink: 0;
   padding-right: 8px;
-  animation: chipmarquee 18s linear infinite;
+  min-width: max-content;
+  animation: chipmarquee 22s linear infinite;
 }
 .skill-col:hover .chip-marquee-track{ animation-play-state: paused; }
 @keyframes chipmarquee{
