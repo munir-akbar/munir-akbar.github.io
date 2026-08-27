@@ -1141,34 +1141,6 @@ section{ padding: 64px 0; position: relative; }
 }
 .dot-item.active{ background: var(--accent-2); transform: scale(1.3); }
 
-/* ============================================================
-   MARQUEE
-   ============================================================ */
-.marquee-section{
-  padding: 46px 0;
-  overflow: hidden;
-  border-top: 1px solid var(--card-border);
-  border-bottom: 1px solid var(--card-border);
-}
-.marquee-track{ display: flex; width: max-content; animation: marquee 32s linear infinite; }
-.marquee-section:hover .marquee-track{ animation-play-state: paused; }
-.marquee-content{
-  display: flex;
-  gap: 50px;
-  padding-right: 50px;
-  align-items: center;
-}
-.marquee-content span{
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  color: var(--text-soft);
-  white-space: nowrap;
-  opacity: 0.7;
-}
-@keyframes marquee{
-  from{ transform: translateX(0); }
-  to{ transform: translateX(-50%); }
-}
 
 /* ============================================================
    CASE STUDIES
@@ -2159,13 +2131,7 @@ section{ padding: 64px 0; position: relative; }
   </div>
 </section>
 
-<!-- ================= TECH MARQUEE ================= -->
-<section class="marquee-section" aria-label="Technologies used">
-  <div class="marquee-track">
-    <div class="marquee-content" id="marqueeContent1"></div>
-    <div class="marquee-content" id="marqueeContent2" aria-hidden="true"></div>
-  </div>
-</section>
+
 
 <!-- ================= CASE STUDIES ================= -->
 <section class="casestudy-section" aria-labelledby="casestudy-heading">
@@ -3327,15 +3293,6 @@ const FAQS = [
     resetAutoplay();
   });
   resetAutoplay();
-
-  /* ============================================================
-     TECH MARQUEE
-     ============================================================ */
-  const marquee1 = document.getElementById('marqueeContent1');
-  const marquee2 = document.getElementById('marqueeContent2');
-  const marqueeHtml = TECH_LOGOS.map(t => `<span>${t}</span>`).join('');
-  marquee1.innerHTML = marqueeHtml;
-  marquee2.innerHTML = marqueeHtml;
 
   /* ============================================================
      DEV SKILLS MARQUEE (Development column, sliding chips)
