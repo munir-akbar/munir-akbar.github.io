@@ -2005,12 +2005,9 @@ section{ padding: 64px 0; position: relative; }
 
     <div class="skills-columns">
       <div class="skill-col reveal">
-        <h3 class="skill-col-title">Development</h3>
-        <div class="chip-marquee">
-          <div class="chip-marquee-track" id="devChipTrack1"></div>
-          <div class="chip-marquee-track" id="devChipTrack2" aria-hidden="true"></div>
-        </div>
-      </div>
+  <h3 class="skill-col-title">Development</h3>
+  <div class="chip-row" id="devChipRow"></div>
+</div>
       <div class="skill-col reveal">
         <h3 class="skill-col-title">SEO</h3>
         <div class="chip-row">
@@ -3343,13 +3340,10 @@ const FAQS = [
   /* ============================================================
      DEV SKILLS MARQUEE (Development column, sliding chips)
      ============================================================ */
-  const devChipTrack1 = document.getElementById('devChipTrack1');
-  const devChipTrack2 = document.getElementById('devChipTrack2');
-  if (devChipTrack1 && devChipTrack2){
-    const devChipHtml = DEV_CHIPS.map(t => `<span class="chip">${t}</span>`).join('');
-    devChipTrack1.innerHTML = devChipHtml;
-    devChipTrack2.innerHTML = devChipHtml;
-  }
+ const devChipRow = document.getElementById('devChipRow');
+if (devChipRow){
+  devChipRow.innerHTML = DEV_CHIPS.map(t => `<span class="chip">${t}</span>`).join('');
+}
 
   /* ============================================================
      CASE STUDIES
