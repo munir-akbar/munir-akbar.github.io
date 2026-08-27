@@ -839,11 +839,15 @@ section{ padding: 64px 0; position: relative; }
 }
 .portfolio-thumb-inner{
   position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
   font-family: var(--font-display);
   font-size: 1.6rem;
   color: rgba(255,255,255,0.85);
   transition: transform 0.5s var(--ease);
+}
+.portfolio-thumb-icon{
+  font-size: 1.8rem;
+  line-height: 1;
 }
 .portfolio-card:hover .portfolio-thumb-inner{ transform: scale(1.08); }
 .portfolio-overlay{
@@ -2572,6 +2576,7 @@ const PROJECTS = [
     name: "Elvore",
     category: "E-commerce",
     thumbGradient: "linear-gradient(135deg,#6C63FF,#00D9FF)",
+    thumbIcon: "&#128092;",
     description: "A WooCommerce storefront built for a fashion and accessories retailer, focused on a clean shopping experience.",
     tech: ["WooCommerce", "PHP", "Custom Theme"],
     services: ["WordPress Development", "Speed Optimization", "Technical SEO"],
@@ -2587,6 +2592,7 @@ const PROJECTS = [
     name: "RONX",
     category: "E-commerce",
     thumbGradient: "linear-gradient(135deg,#00D9FF,#8B5CF6)",
+    thumbIcon: "&#128722;",
     description: "An Australian e-commerce store rebuilt with a faster, more trustworthy checkout experience.",
     tech: ["WooCommerce", "PHP", "MySQL"],
     services: ["WordPress Development", "Plugin Development", "Speed Optimization"],
@@ -2599,33 +2605,19 @@ const PROJECTS = [
   },
   {
     id: "p3",
-    name: "Marlowe & Finch",
+    name: "Gatsby Living",
     category: "E-commerce",
-    thumbGradient: "linear-gradient(135deg,#8B5CF6,#6C63FF)",
-    description: "A boutique fashion storefront with a custom product filtering system built for a large catalog.",
-    tech: ["WooCommerce", "PHP", "MySQL"],
-    services: ["Plugin Development", "Performance Optimization"],
-    url: "https://example.com",
-    overview: "A boutique retailer needed faster product discovery without a full platform migration.",
-    challenge: "Default WooCommerce filtering was too slow with the catalog size and caused layout shift.",
-    solution: "Custom AJAX filtering plugin with debounced queries and skeleton loading states.",
-    seoWork: "Cleaned up faceted-navigation URLs to avoid duplicate content from filter combinations.",
-    performance: "Filter interactions now resolve without a full page reload or visible layout jump."
-  },
-  {
-    id: "p4",
-    name: "Northline Studio",
-    category: "Business",
-    thumbGradient: "linear-gradient(135deg,#6C63FF,#8B5CF6)",
-    description: "A brand site for an architecture studio, rebuilt for speed and local search visibility.",
-    tech: ["WordPress", "PHP", "Custom Theme"],
-    services: ["WordPress Development", "Technical SEO", "Speed Optimization"],
-    url: "https://example.com",
-    overview: "Northline needed a portfolio site that could load fast on mobile and rank for local architecture searches.",
-    challenge: "The previous site ran on a heavy page builder — slow, with duplicate content issues across service pages.",
-    solution: "Rebuilt on a lightweight custom theme with a consolidated page structure and image pipeline.",
-    seoWork: "Fixed canonical conflicts, added LocalBusiness schema, restructured service pages to eliminate cannibalization.",
-    performance: "Lighthouse performance moved from the 40s into the mid-90s on mobile."
+    thumbGradient: "linear-gradient(135deg,#B45309,#D97706)",
+    thumbIcon: "&#128715;",
+    description: "A Shopify furniture storefront for an Australian retailer with multiple physical showrooms.",
+    tech: ["Shopify", "Liquid", "JavaScript"],
+    services: ["Technical SEO", "On-Page SEO", "Speed Optimization"],
+    url: "https://gatsbyliving.com.au/",
+    overview: "Gatsby Living sells furniture online and across several Australian showrooms, so the site needed to support both direct sales and local store discovery.",
+    challenge: "A large, image-heavy catalog across sofas, living, dining, and bedroom categories risked slow browsing and unclear category structure.",
+    solution: "Refined collection and product page structure with clearer category hierarchies and optimized asset delivery.",
+    seoWork: "Structured collection and product data to support category-level and local search visibility.",
+    performance: "Improved browsing speed across product and collection pages despite the large catalog."
   }
 ];
 
@@ -2987,8 +2979,11 @@ const FAQS = [
       card.className = 'portfolio-card reveal in-view';
       card.dataset.category = p.category;
       card.innerHTML = `
-        <div class="portfolio-thumb" style="background:${p.thumbGradient}">
-          <div class="portfolio-thumb-inner">${p.name}</div>
+  <div class="portfolio-thumb" style="background:${p.thumbGradient}">
+    <div class="portfolio-thumb-inner">
+      <span class="portfolio-thumb-icon" aria-hidden="true">${p.thumbIcon || ''}</span>
+      ${p.name}
+    </div>
           <div class="portfolio-overlay">
             <button type="button" class="thumb-btn thumb-btn-preview" data-preview="${p.id}">Live Preview</button>
             <button type="button" class="thumb-btn thumb-btn-view" data-detail="${p.id}">View Details</button>
