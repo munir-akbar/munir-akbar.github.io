@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Arman Iqbal — WordPress Developer & Technical SEO Specialist</title>
+<title>Munir Akbar — WordPress Developer & Technical SEO Specialist</title>
 <meta name="description" content="WordPress developer and technical SEO specialist building fast, custom, search-friendly websites and plugins." />
 
 <!-- OpenGraph placeholders -->
-<meta property="og:title" content="Arman Iqbal — WordPress Developer & Technical SEO Specialist" />
+<meta property="og:title" content="Munir Akbar — WordPress Developer & Technical SEO Specialist" />
 <meta property="og:description" content="Custom WordPress builds, plugin development, and technical SEO that gets found." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="https://example.com/og-image.jpg" />
@@ -17,7 +17,7 @@
 {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
-  "name": "Arman Iqbal — WordPress & SEO",
+  "name": "Munir Akbar — WordPress & SEO",
   "description": "WordPress development, plugin engineering, and technical SEO services.",
   "url": "https://example.com",
   "sameAs": []
@@ -27,6 +27,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script>
+  // Applied before first paint to avoid a flash of the wrong theme.
+  // Mirrors the persistence logic in script.js.
+  (function(){
+    try{
+      var saved = localStorage.getItem('ma-theme-preference');
+      var theme = saved || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch(e){ /* localStorage unavailable — default dark theme applies */ }
+  })();
+</script>
 
 <style>
 /* ============================================================
@@ -59,6 +71,40 @@
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ============================================================
+   LIGHT THEME
+   Applied via [data-theme="light"] on <html>, toggled in JS and
+   persisted to localStorage. Every color in the design system is
+   a token above, so overriding them here re-themes the whole
+   site without touching individual component rules.
+   ============================================================ */
+[data-theme="light"]{
+  --bg: #F6F7FB;
+  --bg-2: #ECEEF6;
+  --card: rgba(15,20,35,0.04);
+  --card-border: rgba(15,20,35,0.10);
+  --text: #12141C;
+  --text-soft: #565F72;
+  --accent: #5B4FE0;
+  --accent-2: #0091AD;
+  --highlight: #7C3AED;
+  --grad-soft: linear-gradient(120deg, rgba(91,79,224,0.12), rgba(0,145,173,0.10));
+}
+[data-theme="light"] .grid-pattern,
+[data-theme="light"] .about-shape-grid,
+[data-theme="light"] .footer-grid-pattern{
+  opacity: 0.5;
+}
+[data-theme="light"] .glow{ opacity: 0.16; }
+[data-theme="light"] .code-panel{ color: #4b5163; }
+[data-theme="light"] .btn-primary{ color: #ffffff; }
+[data-theme="light"] .logo-mark,
+[data-theme="light"] .logo-dot{ color: #ffffff; }
+[data-theme="light"] .stat-number{ color: transparent; }
+[data-theme="light"] ::selection{ background: var(--accent); color: #fff; }
+[data-theme="light"] .modal-frame-wrap{ background: #fff; }
+
+
 *, *::before, *::after{ box-sizing: border-box; }
 html{ scroll-behavior: smooth; scroll-padding-top: var(--header-h); }
 
@@ -70,6 +116,7 @@ body{
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  transition: background 0.4s var(--ease), color 0.4s var(--ease);
 }
 
 h1,h2,h3{
@@ -94,6 +141,73 @@ button{ font-family: inherit; cursor: pointer; }
   outline: 2px solid var(--accent-2);
   outline-offset: 3px;
   border-radius: 4px;
+}
+
+/* ============================================================
+   CUSTOM CURSOR
+   Only enabled on fine-pointer, hover-capable devices (desktop
+   mice/trackpads) via the .has-custom-cursor class set in JS
+   after feature-detecting matchMedia('(pointer:fine)'). Falls
+   back to the native cursor everywhere else (touch, reduced
+   motion, or if JS fails).
+   ============================================================ */
+.custom-cursor{
+  position: fixed;
+  top: 0; left: 0;
+  width: 0; height: 0;
+  pointer-events: none;
+  z-index: 2000;
+  opacity: 0;
+  transition: opacity 0.25s var(--ease);
+}
+.has-custom-cursor .custom-cursor{ opacity: 1; }
+.has-custom-cursor{ cursor: none; }
+.has-custom-cursor a,
+.has-custom-cursor button,
+.has-custom-cursor input,
+.has-custom-cursor select,
+.has-custom-cursor textarea,
+.has-custom-cursor [role="button"]{ cursor: none; }
+
+.cursor-dot{
+  position: absolute;
+  top: 0; left: 0;
+  width: 7px; height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 10px 1px rgba(0,217,255,0.6);
+  transition: transform 0.15s var(--ease), background 0.25s var(--ease);
+}
+.cursor-ring{
+  position: absolute;
+  top: 0; left: 0;
+  width: 34px; height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0,217,255,0.45);
+  transition: transform 0.28s var(--ease), width 0.28s var(--ease), height 0.28s var(--ease),
+              margin 0.28s var(--ease), border-color 0.28s var(--ease), background 0.28s var(--ease);
+}
+
+/* Hover state: ring grows and softly fills when over interactive elements */
+.custom-cursor.is-hovering .cursor-ring{
+  width: 54px; height: 54px;
+  margin: -27px 0 0 -27px;
+  background: rgba(0,217,255,0.08);
+  border-color: rgba(0,217,255,0.7);
+}
+.custom-cursor.is-hovering .cursor-dot{ transform: scale(0.6); }
+
+/* Pressed state: quick squeeze for tactile feedback on click */
+.custom-cursor.is-pressed .cursor-ring{ transform: scale(0.85); }
+.custom-cursor.is-pressed .cursor-dot{ transform: scale(1.3); }
+
+@media (prefers-reduced-motion: reduce){
+  .custom-cursor{ display: none; }
+  .has-custom-cursor{ cursor: auto; }
+  .has-custom-cursor a, .has-custom-cursor button, .has-custom-cursor input,
+  .has-custom-cursor select, .has-custom-cursor textarea, .has-custom-cursor [role="button"]{ cursor: pointer; }
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -129,7 +243,7 @@ button{ font-family: inherit; cursor: pointer; }
 
 .section-sub{
   max-width: 560px;
-  margin: 0 auto 3rem;
+  margin: 0 auto 1.8rem;
   text-align: center;
   font-size: 1.02rem;
 }
@@ -272,6 +386,43 @@ button{ font-family: inherit; cursor: pointer; }
 .nav-link.active::after{ width: 100%; }
 
 .btn-nav-cta{ flex-shrink: 0; padding: 11px 22px; font-size: 0.88rem; }
+
+/* ============================================================
+   THEME TOGGLE
+   ============================================================ */
+.theme-toggle{
+  position: relative;
+  flex-shrink: 0;
+  width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  transition: border-color 0.25s, background 0.25s, transform 0.25s var(--ease);
+}
+.theme-toggle:hover{ border-color: rgba(0,217,255,0.4); transform: translateY(-2px); }
+.theme-toggle-icon{
+  position: absolute;
+  display: flex;
+  transition: opacity 0.3s var(--ease), transform 0.4s var(--ease);
+}
+.theme-icon-sun{ opacity: 0; transform: rotate(-90deg) scale(0.6); }
+.theme-icon-moon{ opacity: 1; transform: rotate(0) scale(1); }
+[data-theme="light"] .theme-icon-sun{ opacity: 1; transform: rotate(0) scale(1); }
+[data-theme="light"] .theme-icon-moon{ opacity: 0; transform: rotate(90deg) scale(0.6); }
+
+.theme-toggle-mobile{
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  margin-top: 6px;
+}
+.theme-toggle-mobile .theme-toggle-icon{ position: relative; }
+.theme-toggle-label{ font-size: 0.92rem; font-weight: 600; }
 
 .hamburger{
   display: none;
@@ -475,31 +626,6 @@ button{ font-family: inherit; cursor: pointer; }
   50%{ transform: translateY(-10px); }
 }
 
-.scroll-cue{
-  position: absolute;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 26px; height: 42px;
-  border: 2px solid rgba(255,255,255,0.25);
-  border-radius: 14px;
-  z-index: 1;
-}
-.scroll-cue-line{
-  position: absolute;
-  top: 8px; left: 50%;
-  width: 3px; height: 8px;
-  background: var(--accent-2);
-  border-radius: 2px;
-  transform: translateX(-50%);
-  animation: scrollcue 1.8s ease-in-out infinite;
-}
-@keyframes scrollcue{
-  0%{ opacity: 1; transform: translate(-50%, 0); }
-  70%{ opacity: 0; transform: translate(-50%, 14px); }
-  100%{ opacity: 0; }
-}
-
 /* ============================================================
    STATS
    ============================================================ */
@@ -538,7 +664,7 @@ button{ font-family: inherit; cursor: pointer; }
 /* ============================================================
    GENERIC SECTION SPACING
    ============================================================ */
-section{ padding: 110px 0; position: relative; }
+section{ padding: 64px 0; position: relative; }
 .stats-section{ padding: 0; }
 
 /* ============================================================
@@ -583,7 +709,7 @@ section{ padding: 110px 0; position: relative; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  margin-top: 50px;
+  margin-top: 32px;
 }
 .service-card{
   background: var(--card);
@@ -637,33 +763,10 @@ section{ padding: 110px 0; position: relative; }
 /* ============================================================
    PORTFOLIO
    ============================================================ */
-.filter-bar{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin: 44px 0 46px;
-}
-.filter-btn{
-  padding: 9px 20px;
-  border-radius: 999px;
-  border: 1px solid var(--card-border);
-  background: var(--card);
-  color: var(--text-soft);
-  font-size: 0.85rem;
-  font-weight: 600;
-  transition: all 0.25s var(--ease);
-}
-.filter-btn:hover{ color: var(--text); border-color: rgba(255,255,255,0.2); }
-.filter-btn.active{
-  background: var(--grad);
-  color: #06070c;
-  border-color: transparent;
-}
-
 .portfolio-grid{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  margin-top: 30px;
   gap: 24px;
 }
 .portfolio-card{
@@ -744,7 +847,7 @@ section{ padding: 110px 0; position: relative; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  margin-top: 40px;
+  margin-top: 26px;
 }
 .skill-col{
   background: var(--card);
@@ -769,8 +872,29 @@ section{ padding: 110px 0; position: relative; }
   border: 1px solid var(--card-border);
   color: var(--text-soft);
   transition: border-color 0.25s, color 0.25s;
+  white-space: nowrap;
 }
 .chip:hover{ border-color: var(--accent); color: var(--text); }
+
+.chip-marquee{
+  overflow: hidden;
+  display: flex;
+  width: 100%;
+  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+}
+.chip-marquee-track{
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  padding-right: 8px;
+  animation: chipmarquee 18s linear infinite;
+}
+.skill-col:hover .chip-marquee-track{ animation-play-state: paused; }
+@keyframes chipmarquee{
+  from{ transform: translateX(0); }
+  to{ transform: translateX(-100%); }
+}
 
 /* ============================================================
    WORKFLOW
@@ -782,7 +906,7 @@ section{ padding: 110px 0; position: relative; }
   justify-content: center;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 50px;
+  margin-top: 32px;
 }
 .wf-step{
   padding: 14px 22px;
@@ -805,7 +929,7 @@ section{ padding: 110px 0; position: relative; }
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
-  margin-top: 46px;
+  margin-top: 30px;
 }
 .perf-card{
   display: flex;
@@ -873,7 +997,7 @@ section{ padding: 110px 0; position: relative; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  margin-top: 50px;
+  margin-top: 32px;
 }
 .process-step{
   padding: 28px 24px;
@@ -896,7 +1020,7 @@ section{ padding: 110px 0; position: relative; }
    TESTIMONIALS
    ============================================================ */
 .testimonials-section{ background: var(--bg-2); }
-.testimonial-carousel{ max-width: 720px; margin: 50px auto 0; }
+.testimonial-carousel{ max-width: 720px; margin: 30px auto 0; }
 .testimonial-track{
   overflow: hidden;
   position: relative;
@@ -984,7 +1108,7 @@ section{ padding: 110px 0; position: relative; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  margin-top: 46px;
+  margin-top: 30px;
 }
 .cs-card{
   background: var(--card);
@@ -1014,7 +1138,7 @@ section{ padding: 110px 0; position: relative; }
    FAQ
    ============================================================ */
 .faq-inner{ max-width: 780px; }
-.faq-accordion{ margin-top: 44px; display: flex; flex-direction: column; gap: 12px; }
+.faq-accordion{ margin-top: 28px; display: flex; flex-direction: column; gap: 12px; }
 .faq-item{
   border: 1px solid var(--card-border);
   border-radius: var(--radius-sm);
@@ -1073,6 +1197,8 @@ section{ padding: 110px 0; position: relative; }
   font-size: 0.92rem;
   color: var(--text-soft);
 }
+.contact-points li a{ color: var(--text-soft); transition: color 0.25s; }
+.contact-points li a:hover{ color: var(--accent-2); }
 
 .contact-form{
   background: var(--card);
@@ -1104,38 +1230,157 @@ section{ padding: 110px 0; position: relative; }
   outline: none;
 }
 .form-row textarea{ resize: vertical; }
-.form-row select{ appearance: none; }
+.form-row select{
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  /* Explicit color-scheme + background/color ensures the native
+     option list (drawn by the OS) also uses a dark background
+     with light text, instead of defaulting to light-on-light. */
+  color-scheme: dark;
+  background-color: #0d1220;
+  color: var(--text);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1L6 6L11 1' stroke='%2300D9FF' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 42px;
+  cursor: pointer;
+}
+.form-row select option{
+  background-color: #0d1220;
+  color: var(--text);
+}
+.form-row select:invalid,
+.form-row select option[value=""]{
+  color: var(--text-soft);
+}
 
 /* ============================================================
    FOOTER
    ============================================================ */
-.site-footer{ border-top: 1px solid var(--card-border); padding-top: 60px; }
+.site-footer{
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--card-border);
+  padding-top: 0;
+  background: var(--bg-2);
+}
+.footer-bg{ position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.footer-grid-pattern{
+  position: absolute; inset: -1px;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 30%, transparent 85%);
+}
+.footer-glow{
+  width: 480px; height: 300px;
+  background: var(--accent);
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.16;
+}
+
+.footer-cta{
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 70px 32px 56px;
+  border-bottom: 1px solid var(--card-border);
+}
+.footer-cta h2{ font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 0.3em; }
+.footer-cta p{ max-width: 480px; margin: 0 auto 1.6em; }
+
 .footer-inner{
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1.4fr 0.8fr 0.8fr 1fr;
   gap: 40px;
   align-items: start;
-  padding-bottom: 50px;
+  padding: 56px 32px 50px;
 }
-.footer-brand{ display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.footer-brand .logo{ margin-bottom: 14px; }
 .footer-brand .logo-mark{ width: 34px; height: 34px; font-size: 0.85rem; }
 .footer-tag{
-  width: 100%;
-  font-size: 0.82rem;
+  font-size: 0.86rem;
   color: var(--text-soft);
-  margin: 6px 0 0;
+  margin: 0 0 20px;
+  max-width: 320px;
 }
-.footer-nav{ display: flex; flex-direction: column; gap: 10px; }
-.footer-nav a{ font-size: 0.88rem; color: var(--text-soft); }
+.footer-social{ display: flex; gap: 10px; }
+.footer-social-icon{
+  width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  color: var(--text-soft);
+  transition: color 0.25s, border-color 0.25s, transform 0.25s var(--ease);
+}
+.footer-social-icon:hover{
+  color: var(--accent-2);
+  border-color: rgba(0,217,255,0.35);
+  transform: translateY(-3px);
+}
+
+.footer-col-title{
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-2);
+  margin: 0 0 16px;
+}
+.footer-nav{ display: flex; flex-direction: column; gap: 12px; }
+.footer-nav a{ font-size: 0.9rem; color: var(--text-soft); transition: color 0.25s; }
 .footer-nav a:hover{ color: var(--text); }
-.footer-social{ display: flex; flex-direction: column; gap: 10px; }
-.footer-social a{ font-size: 0.88rem; color: var(--text-soft); }
-.footer-social a:hover{ color: var(--text); }
+
+.footer-email{
+  display: inline-block;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 14px;
+  transition: color 0.25s;
+}
+.footer-email:hover{ color: var(--accent-2); }
+.footer-availability{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  margin: 0;
+}
+.footer-dot{
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #28c840;
+  box-shadow: 0 0 0 3px rgba(40,200,64,0.18);
+  flex-shrink: 0;
+  animation: dotpulse 2.2s ease-in-out infinite;
+}
+@keyframes dotpulse{
+  0%,100%{ opacity: 1; }
+  50%{ opacity: 0.5; }
+}
+
 .footer-bottom{
+  position: relative;
+  z-index: 1;
   border-top: 1px solid var(--card-border);
   padding: 22px 0;
 }
-.footer-bottom p{ margin:0; font-size: 0.8rem; text-align: center; }
+.footer-bottom-inner{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.footer-bottom p{ margin:0; font-size: 0.8rem; color: var(--text-soft); }
 
 /* ============================================================
    BACK TO TOP
@@ -1261,6 +1506,105 @@ section{ padding: 110px 0; position: relative; }
 .detail-tags{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
 .detail-actions{ display: flex; gap: 14px; flex-wrap: wrap; margin-top: 30px; }
 
+/* Service info modal */
+.service-window{ max-width: 620px; position: relative; padding: 0; }
+.service-close{ position: absolute; top: 16px; right: 16px; z-index: 3; background: rgba(8,11,18,0.55); }
+.service-modal-hero{
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.service-modal-hero::before{
+  content:'';
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(ellipse 70% 100% at 50% 40%, black 30%, transparent 85%);
+}
+.service-modal-icon{
+  position: relative;
+  z-index: 1;
+  width: 66px; height: 66px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 18px;
+  background: rgba(8,11,18,0.35);
+  backdrop-filter: blur(6px);
+  font-size: 1.7rem;
+  font-family: var(--font-mono);
+  color: #fff;
+  box-shadow: 0 14px 34px -10px rgba(0,0,0,0.5);
+}
+.service-modal-body{ padding: 34px 36px 36px; overflow-y: auto; }
+.service-modal-body h2{ font-size: 1.5rem; margin-bottom: 0.3em; }
+.service-modal-tagline{ font-size: 0.98rem; margin-bottom: 1.6em; }
+.service-modal-section{ margin-bottom: 24px; }
+.service-modal-section h4{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-2);
+  margin: 0 0 14px;
+}
+.sm-h-icon{ font-size: 0.85rem; }
+.service-modal-list{
+  list-style: none;
+  margin: 0; padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.service-modal-list li{
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--text-soft);
+}
+.sm-check{
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--grad-soft);
+  color: var(--accent-2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  margin-top: 1px;
+}
+.service-modal-steps{
+  list-style: none;
+  margin: 0; padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.service-modal-steps li{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+  color: var(--text-soft);
+}
+.sm-step-num{
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  color: var(--accent-2);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
 /* ============================================================
    TOAST
    ============================================================ */
@@ -1308,6 +1652,7 @@ section{ padding: 110px 0; position: relative; }
   .process-timeline{ grid-template-columns: repeat(2,1fr); }
   .casestudy-grid{ grid-template-columns: 1fr; }
   .perf-grid{ grid-template-columns: repeat(2,1fr); gap: 40px; }
+  .footer-inner{ grid-template-columns: 1fr 1fr; gap: 34px 40px; }
 }
 
 @media (max-width: 900px){
@@ -1332,7 +1677,7 @@ section{ padding: 110px 0; position: relative; }
 }
 
 @media (max-width: 640px){
-  section{ padding: 76px 0; }
+  section{ padding: 48px 0; }
   .section-inner{ padding: 0 22px; }
   .header-inner{ padding: 0 20px; }
   .services-grid{ grid-template-columns: 1fr; }
@@ -1349,15 +1694,22 @@ section{ padding: 110px 0; position: relative; }
 </head>
 <body>
 
+<!-- Custom cursor (desktop / fine-pointer devices only, see script.js) -->
+<div class="custom-cursor" id="customCursor" aria-hidden="true">
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+</div>
+
+
 <!-- Scroll progress -->
 <div class="scroll-progress" id="scrollProgress"></div>
 
 <!-- ================= HEADER ================= -->
 <header class="site-header" id="siteHeader">
   <div class="header-inner">
-    <a href="#home" class="logo" aria-label="Arman Iqbal — home">
-      <span class="logo-mark">AI<span class="logo-dot">.</span></span>
-      <span class="logo-text">Arman&nbsp;Iqbal</span>
+    <a href="#home" class="logo" aria-label="Munir Akbar — home">
+      <span class="logo-mark">MA<span class="logo-dot">.</span></span>
+      <span class="logo-text">Munir&nbsp;Akbar</span>
     </a>
 
     <nav class="main-nav" id="mainNav" aria-label="Primary">
@@ -1373,6 +1725,15 @@ section{ padding: 110px 0; position: relative; }
 
     <a href="#contact" class="btn btn-primary btn-nav-cta">Let's Work Together</a>
 
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+      <span class="theme-toggle-icon theme-icon-sun" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg>
+      </span>
+      <span class="theme-toggle-icon theme-icon-moon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 14.6a8.5 8.5 0 0 1-10.6-11 8.5 8.5 0 1 0 10.6 11Z"/></svg>
+      </span>
+    </button>
+
     <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
       <span></span><span></span><span></span>
     </button>
@@ -1387,6 +1748,15 @@ section{ padding: 110px 0; position: relative; }
     <a href="#process" class="nav-link" data-nav>Process</a>
     <a href="#testimonials" class="nav-link" data-nav>Testimonials</a>
     <a href="#contact" class="nav-link" data-nav>Contact</a>
+    <button class="theme-toggle theme-toggle-mobile" id="themeToggleMobile" type="button" aria-label="Switch to light mode" aria-pressed="false">
+      <span class="theme-toggle-icon theme-icon-sun" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg>
+      </span>
+      <span class="theme-toggle-icon theme-icon-moon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.5 14.6a8.5 8.5 0 0 1-10.6-11 8.5 8.5 0 1 0 10.6 11Z"/></svg>
+      </span>
+      <span class="theme-toggle-label">Switch to Light Mode</span>
+    </button>
     <a href="#contact" class="btn btn-primary" data-nav>Let's Work Together</a>
   </div>
 </header>
@@ -1461,9 +1831,6 @@ section{ padding: 110px 0; position: relative; }
     </div>
   </div>
 
-  <a href="#about" class="scroll-cue" data-nav aria-label="Scroll to About section">
-    <span class="scroll-cue-line"></span>
-  </a>
 </section>
 
 <!-- ================= STATS ================= -->
@@ -1549,10 +1916,6 @@ section{ padding: 110px 0; position: relative; }
     <p class="eyebrow center">Selected Work</p>
     <h2 id="portfolio-heading" class="section-title center">Real websites. Real builds. Real results.</h2>
 
-    <div class="filter-bar" id="filterBar" role="tablist" aria-label="Filter projects by category">
-      <!-- injected by JS -->
-    </div>
-
     <div class="portfolio-grid" id="portfolioGrid">
       <!-- injected by JS -->
     </div>
@@ -1568,10 +1931,9 @@ section{ padding: 110px 0; position: relative; }
     <div class="skills-columns">
       <div class="skill-col reveal">
         <h3 class="skill-col-title">Development</h3>
-        <div class="chip-row">
-          <span class="chip">WordPress</span><span class="chip">PHP</span><span class="chip">JavaScript</span>
-          <span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">MySQL</span>
-          <span class="chip">REST API</span><span class="chip">Git</span>
+        <div class="chip-marquee">
+          <div class="chip-marquee-track" id="devChipTrack1"></div>
+          <div class="chip-marquee-track" id="devChipTrack2" aria-hidden="true"></div>
         </div>
       </div>
       <div class="skill-col reveal">
@@ -1650,7 +2012,10 @@ section{ padding: 110px 0; position: relative; }
       <p class="eyebrow">Beyond the Page Builder</p>
       <h2 id="customdev-heading">If WordPress can't do it out of the box, I build it.</h2>
       <p class="section-sub" style="text-align:left; margin-left:0;">Custom plugins, internal tools, and integrations for the moments a theme setting won't cover.</p>
-      <a href="#contact" class="btn btn-primary" data-nav>Start a Project</a>
+      <div class="hero-ctas" style="margin-bottom:0;">
+        <a href="#contact" class="btn btn-primary" data-nav>Start a Project</a>
+        <button type="button" class="btn btn-ghost" data-service-info="custom-dev">Learn More</button>
+      </div>
     </div>
     <div class="customdev-list reveal">
       <div class="cd-item"><span class="cd-icon">&#128268;</span> Custom Plugins</div>
@@ -1762,7 +2127,7 @@ section{ padding: 110px 0; position: relative; }
       <h2 id="contact-heading">Let's build something that performs.</h2>
       <p class="section-sub" style="text-align:left; margin-left:0;">Tell me about the project — I'll reply with next steps within a couple of days.</p>
       <ul class="contact-points">
-        <li><span aria-hidden="true">&#9993;</span> hello@armaniqbal.dev</li>
+        <li><span aria-hidden="true">&#9993;</span> <a href="mailto:munirakbar.gcu@gmail.com">munirakbar.gcu@gmail.com</a></li>
         <li><span aria-hidden="true">&#128205;</span> Remote — Worldwide</li>
         <li><span aria-hidden="true">&#8987;</span> Currently booking new projects</li>
       </ul>
@@ -1810,33 +2175,68 @@ section{ padding: 110px 0; position: relative; }
 
 <!-- ================= FOOTER ================= -->
 <footer class="site-footer">
+  <div class="footer-bg" aria-hidden="true">
+    <div class="footer-grid-pattern"></div>
+    <div class="glow footer-glow"></div>
+  </div>
+
+  <div class="section-inner footer-cta reveal">
+    <h2>Have a project in mind?</h2>
+    <p>Let's talk about what a fast, search-ready WordPress site could do for it.</p>
+    <a href="#contact" class="btn btn-primary" data-nav>Start a Conversation</a>
+  </div>
+
   <div class="section-inner footer-inner">
     <div class="footer-brand">
-      <span class="logo-mark">AI<span class="logo-dot">.</span></span>
-      <span class="logo-text">Arman Iqbal</span>
-      <p class="footer-tag">WordPress Development &amp; Technical SEO</p>
+      <a href="#home" class="logo" data-nav>
+        <span class="logo-mark">MA<span class="logo-dot">.</span></span>
+        <span class="logo-text">Munir Akbar</span>
+      </a>
+      <p class="footer-tag">WordPress Development &amp; Technical SEO — building fast, search-ready websites.</p>
+      <div class="footer-social" aria-label="Social links">
+        <a href="#" aria-label="GitHub" class="footer-social-icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-1.95c-3.2.7-3.88-1.54-3.88-1.54-.52-1.34-1.28-1.7-1.28-1.7-1.04-.72.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.58.23 2.75.11 3.04.73.8 1.18 1.82 1.18 3.08 0 4.41-2.69 5.38-5.25 5.67.42.36.78 1.07.78 2.16v3.2c0 .3.21.66.79.55A11.5 11.5 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/></svg>
+        </a>
+        <a href="#" aria-label="LinkedIn" class="footer-social-icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27ZM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+        </a>
+        <a href="#" aria-label="X (Twitter)" class="footer-social-icon">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.9 1.5h3.68l-8.04 9.19L24 22.5h-7.4l-5.8-7.58-6.64 7.58H.47l8.6-9.83L0 1.5h7.59l5.24 6.93L18.9 1.5Zm-1.3 18.78h2.04L6.5 3.6H4.31l13.29 16.68Z"/></svg>
+        </a>
+      </div>
     </div>
 
-    <nav class="footer-nav" aria-label="Footer">
-      <a href="#home" data-nav>Home</a>
-      <a href="#about" data-nav>About</a>
-      <a href="#services" data-nav>Services</a>
-      <a href="#portfolio" data-nav>Portfolio</a>
-      <a href="#skills" data-nav>Skills</a>
-      <a href="#process" data-nav>Process</a>
-      <a href="#testimonials" data-nav>Testimonials</a>
-      <a href="#contact" data-nav>Contact</a>
-    </nav>
+    <div class="footer-col">
+      <h4 class="footer-col-title">Navigate</h4>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="#home" data-nav>Home</a>
+        <a href="#about" data-nav>About</a>
+        <a href="#services" data-nav>Services</a>
+        <a href="#portfolio" data-nav>Portfolio</a>
+      </nav>
+    </div>
 
-    <div class="footer-social" aria-label="Social links">
-      <a href="#" aria-label="GitHub">GitHub</a>
-      <a href="#" aria-label="LinkedIn">LinkedIn</a>
-      <a href="#" aria-label="X (Twitter)">X</a>
+    <div class="footer-col">
+      <h4 class="footer-col-title">More</h4>
+      <nav class="footer-nav" aria-label="Footer secondary">
+        <a href="#skills" data-nav>Skills</a>
+        <a href="#process" data-nav>Process</a>
+        <a href="#testimonials" data-nav>Testimonials</a>
+        <a href="#contact" data-nav>Contact</a>
+      </nav>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-col-title">Get in Touch</h4>
+      <a href="mailto:munirakbar.gcu@gmail.com" class="footer-email">munirakbar.gcu@gmail.com</a>
+      <p class="footer-availability"><span class="footer-dot" aria-hidden="true"></span> Currently booking new projects</p>
     </div>
   </div>
+
   <div class="footer-bottom">
-    <div class="section-inner">
-      <p>&copy; <span id="year"></span> Arman Iqbal. All rights reserved.</p>
+    <div class="section-inner footer-bottom-inner">
+      <p>&copy; <span id="year"></span> Munir Akbar. All rights reserved.</p>
+      <p class="footer-madewith">Designed &amp; built with WordPress-grade care.</p>
     </div>
   </div>
 </footer>
@@ -1872,6 +2272,16 @@ section{ padding: 110px 0; position: relative; }
   </div>
 </div>
 
+<!-- ================= SERVICE INFO MODAL ================= -->
+<div class="modal-overlay" id="serviceModal" role="dialog" aria-modal="true" aria-labelledby="serviceModalTitle" hidden>
+  <div class="modal-window service-window">
+    <button class="modal-close service-close" id="serviceModalClose" aria-label="Close service details">&times;</button>
+    <div class="service-modal-content" id="serviceModalContent">
+      <!-- injected by JS -->
+    </div>
+  </div>
+</div>
+
 <!-- ================= TOAST ================= -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -1884,91 +2294,277 @@ section{ padding: 110px 0; position: relative; }
 
 const SERVICES = [
   {
+    id: "wp-development",
     icon: "&#128187;",
     title: "WordPress Development",
     desc: "Custom-built WordPress sites from the ground up — no bloated starter themes."
   },
   {
+    id: "custom-wp-development",
     icon: "&#127959;",
     title: "Custom WordPress Development",
     desc: "Bespoke functionality when the brief goes beyond what a theme can offer."
   },
   {
+    id: "plugin-development",
     icon: "&#128268;",
     title: "WordPress Plugin Development",
     desc: "Purpose-built plugins with clean, maintainable, WordPress-standard PHP."
   },
   {
+    id: "theme-customization",
     icon: "&#127912;",
     title: "Theme Customization",
     desc: "Deep customization of existing themes to match brand and function precisely."
   },
   {
+    id: "technical-seo",
     icon: "&#128269;",
     title: "Technical SEO",
     desc: "Crawlability, indexing, site architecture, and the fixes that unblock rankings."
   },
   {
+    id: "onpage-seo",
     icon: "&#128221;",
     title: "On-Page SEO",
     desc: "Content structure, metadata, and internal linking tuned for search intent."
   },
   {
+    id: "speed-optimization",
     icon: "&#9889;",
     title: "Website Speed Optimization",
     desc: "Core Web Vitals-focused tuning — caching, asset delivery, render performance."
   },
   {
+    id: "schema-jsonld",
     icon: "{ }",
     title: "Schema &amp; JSON-LD",
     desc: "Structured data that helps search engines understand — and feature — your pages."
   },
   {
+    id: "maintenance",
     icon: "&#128736;",
     title: "Website Maintenance",
     desc: "Ongoing updates, monitoring, and optimization after launch."
   }
 ];
 
-const FILTERS = ["All", "WordPress", "SEO", "Business", "SaaS", "E-commerce", "Tools", "Landing Pages"];
+/* ============================================================
+   Detailed content for each "Learn More" popup — keyed by id.
+   Each entry gets a visual accent (gradient + icon), a short
+   pitch, what's included, and the typical process.
+   ============================================================ */
+const SERVICE_DETAILS = {
+  "wp-development": {
+    icon: "&#128187;",
+    gradient: "linear-gradient(135deg,#6C63FF,#00D9FF)",
+    tagline: "A WordPress site built for speed, structure, and search — not just looks.",
+    includes: [
+      "Custom theme built from a clean, lightweight codebase",
+      "Semantic, accessible HTML structure from day one",
+      "Mobile-first responsive layout across all breakpoints",
+      "Performance budget set and enforced before launch"
+    ],
+    process: [
+      "Discovery call to map goals and content structure",
+      "Wireframe and design direction sign-off",
+      "Custom theme build with staged reviews",
+      "QA, performance pass, and launch"
+    ]
+  },
+  "custom-wp-development": {
+    icon: "&#127959;",
+    gradient: "linear-gradient(135deg,#8B5CF6,#6C63FF)",
+    tagline: "When the brief goes past what any theme or builder can offer out of the box.",
+    includes: [
+      "Custom post types and fields tailored to your content model",
+      "Bespoke admin workflows for non-technical editors",
+      "Third-party API integrations where needed",
+      "Codebase built to be extended, not patched"
+    ],
+    process: [
+      "Requirements mapping and technical feasibility check",
+      "Architecture plan before any code is written",
+      "Iterative build with visible milestones",
+      "Handover documentation included"
+    ]
+  },
+  "plugin-development": {
+    icon: "&#128268;",
+    gradient: "linear-gradient(135deg,#00D9FF,#8B5CF6)",
+    tagline: "Purpose-built plugins, written to WordPress coding standards from the start.",
+    includes: [
+      "Clean, documented, maintainable PHP",
+      "Follows WordPress plugin API best practices",
+      "Compatible with common caching and security plugins",
+      "Update-safe — no core file modifications"
+    ],
+    process: [
+      "Define exact functionality and edge cases",
+      "Build against a local staging environment",
+      "Cross-plugin and cross-theme compatibility testing",
+      "Deployment and post-launch monitoring"
+    ]
+  },
+  "theme-customization": {
+    icon: "&#127912;",
+    gradient: "linear-gradient(135deg,#6C63FF,#8B5CF6)",
+    tagline: "Make an existing theme fit your brand and function exactly — without starting over.",
+    includes: [
+      "Child theme setup to protect future updates",
+      "Custom CSS and template overrides",
+      "Layout and component adjustments matching brand guidelines",
+      "Cleanup of unused theme bloat"
+    ],
+    process: [
+      "Audit current theme and identify constraints",
+      "Scope exactly what changes and what stays",
+      "Implement via child theme for safe updates",
+      "Visual QA across devices"
+    ]
+  },
+  "technical-seo": {
+    icon: "&#128269;",
+    gradient: "linear-gradient(135deg,#00D9FF,#6C63FF)",
+    tagline: "The structural fixes that let search engines actually find and understand your site.",
+    includes: [
+      "Full crawlability and indexing audit",
+      "Canonical tag and duplicate content resolution",
+      "Sitemap and robots.txt configuration",
+      "Site architecture and internal linking review"
+    ],
+    process: [
+      "Technical audit using crawling and search console data",
+      "Prioritized fix list by impact and effort",
+      "Implementation of structural fixes",
+      "Monitoring for indexing improvements post-fix"
+    ]
+  },
+  "onpage-seo": {
+    icon: "&#128221;",
+    gradient: "linear-gradient(135deg,#8B5CF6,#00D9FF)",
+    tagline: "Content and structure tuned to match what people are actually searching for.",
+    includes: [
+      "Keyword-to-page mapping to avoid cannibalization",
+      "Title, meta description, and heading optimization",
+      "Internal linking strategy between related pages",
+      "Content gap identification"
+    ],
+    process: [
+      "Keyword and intent research",
+      "Page-by-page optimization plan",
+      "Implementation across priority pages",
+      "Performance tracking against target terms"
+    ]
+  },
+  "speed-optimization": {
+    icon: "&#9889;",
+    gradient: "linear-gradient(135deg,#6C63FF,#00D9FF)",
+    tagline: "Core Web Vitals-focused tuning so pages load fast on real-world connections.",
+    includes: [
+      "Render-blocking script and style cleanup",
+      "Image compression and modern format delivery",
+      "Caching and CDN configuration",
+      "Largest Contentful Paint and layout shift fixes"
+    ],
+    process: [
+      "Baseline performance audit (mobile + desktop)",
+      "Identify highest-impact bottlenecks",
+      "Implement fixes in order of impact",
+      "Re-test and confirm score improvement"
+    ]
+  },
+  "schema-jsonld": {
+    icon: "{ }",
+    gradient: "linear-gradient(135deg,#00D9FF,#8B5CF6)",
+    tagline: "Structured data that helps search engines understand — and feature — your pages.",
+    includes: [
+      "JSON-LD schema matched to content type",
+      "Organization, Product, Article, or FAQ schema as relevant",
+      "Validation against Google's structured data guidelines",
+      "Rich result eligibility review"
+    ],
+    process: [
+      "Identify pages that benefit most from schema",
+      "Author and validate structured data",
+      "Deploy via theme or lightweight plugin",
+      "Monitor rich result appearance in Search Console"
+    ]
+  },
+  "maintenance": {
+    icon: "&#128736;",
+    gradient: "linear-gradient(135deg,#8B5CF6,#6C63FF)",
+    tagline: "Ongoing care so the site stays fast, secure, and up to date after launch.",
+    includes: [
+      "Core, theme, and plugin updates on a set schedule",
+      "Uptime and performance monitoring",
+      "Regular backups with tested restore points",
+      "Priority support for fixes and small changes"
+    ],
+    process: [
+      "Initial site health baseline",
+      "Scheduled update and monitoring cadence",
+      "Monthly health report",
+      "On-demand support as issues arise"
+    ]
+  },
+  "custom-dev": {
+    icon: "&#9881;",
+    gradient: "linear-gradient(135deg,#6C63FF,#8B5CF6)",
+    tagline: "If WordPress can't do it out of the box, it gets built as a custom solution.",
+    includes: [
+      "Custom plugins for functionality with no reliable off-the-shelf option",
+      "API integrations connecting WordPress to outside tools",
+      "Custom admin dashboards for internal teams",
+      "Workflow automation to remove manual, repetitive tasks"
+    ],
+    process: [
+      "Map the exact gap a standard plugin can't fill",
+      "Propose a scoped technical approach",
+      "Build and test against real content and data",
+      "Deliver with documentation for future maintenance"
+    ]
+  }
+};
+
 
 const PROJECTS = [
   {
     id: "p1",
-    name: "Northline Studio",
-    category: "Business",
+    name: "Elvore",
+    category: "E-commerce",
     thumbGradient: "linear-gradient(135deg,#6C63FF,#00D9FF)",
-    description: "A brand site for an architecture studio, rebuilt for speed and search visibility.",
-    tech: ["WordPress", "PHP", "Custom Theme"],
-    services: ["WordPress Development", "Technical SEO", "Speed Optimization"],
-    url: "https://example.com",
-    overview: "Northline needed a portfolio site that could load fast on mobile and rank for local architecture searches.",
-    challenge: "The previous site ran on a heavy page builder — slow, with duplicate content issues across service pages.",
-    solution: "Rebuilt on a lightweight custom theme with a consolidated page structure and image pipeline.",
-    seoWork: "Fixed canonical conflicts, added LocalBusiness schema, restructured service pages to eliminate cannibalization.",
-    performance: "Lighthouse performance moved from the 40s into the mid-90s on mobile."
+    description: "A WooCommerce storefront built for a fashion and accessories retailer, focused on a clean shopping experience.",
+    tech: ["WooCommerce", "PHP", "Custom Theme"],
+    services: ["WordPress Development", "Speed Optimization", "Technical SEO"],
+    url: "https://elvore.store/",
+    overview: "Elvore needed an online store that felt premium on mobile, where the majority of shoppers browse and check out.",
+    challenge: "A generic storefront theme was slowing down product pages and making checkout feel disjointed.",
+    solution: "Rebuilt the storefront on a lightweight custom theme with a streamlined product-to-checkout flow.",
+    seoWork: "Structured product data and clean category architecture to support organic product discovery.",
+    performance: "Improved mobile load times across product and category pages."
   },
   {
     id: "p2",
-    name: "Calc Suite",
-    category: "Tools",
+    name: "RONX",
+    category: "E-commerce",
     thumbGradient: "linear-gradient(135deg,#00D9FF,#8B5CF6)",
-    description: "A family of interactive calculator tools built as embeddable WordPress widgets.",
-    tech: ["WordPress", "JavaScript", "REST API"],
-    services: ["Plugin Development", "Custom Development"],
-    url: "https://example.com",
-    overview: "A suite of calculator tools needed to share logic across multiple WordPress installs.",
-    challenge: "Each calculator was previously a standalone script, duplicated and inconsistently maintained.",
-    solution: "Built a shared plugin core with a JS calculation engine and scoped CSS per instance.",
-    seoWork: "Added tool-specific schema and FAQ markup to improve rich result eligibility.",
-    performance: "Reduced total script weight by consolidating duplicate logic into one core bundle."
+    description: "An Australian e-commerce store rebuilt with a faster, more trustworthy checkout experience.",
+    tech: ["WooCommerce", "PHP", "MySQL"],
+    services: ["WordPress Development", "Plugin Development", "Speed Optimization"],
+    url: "https://ronxe.com.au/",
+    overview: "RONX needed a storefront that could handle promotions and seasonal traffic spikes without slowing down.",
+    challenge: "Checkout and cart interactions were sluggish, and the previous setup made running sales awkward.",
+    solution: "Optimized the WooCommerce checkout flow and added lightweight custom logic for promotions.",
+    seoWork: "Cleaned up product and category metadata to improve visibility for core search terms.",
+    performance: "Reduced friction in the cart-to-checkout path, with noticeably faster page transitions."
   },
   {
     id: "p3",
     name: "Marlowe & Finch",
     category: "E-commerce",
     thumbGradient: "linear-gradient(135deg,#8B5CF6,#6C63FF)",
-    description: "A WooCommerce storefront with a custom product filtering system.",
+    description: "A boutique fashion storefront with a custom product filtering system built for a large catalog.",
     tech: ["WooCommerce", "PHP", "MySQL"],
     services: ["Plugin Development", "Performance Optimization"],
     url: "https://example.com",
@@ -1980,48 +2576,18 @@ const PROJECTS = [
   },
   {
     id: "p4",
-    name: "Ledgerline",
-    category: "SaaS",
+    name: "Northline Studio",
+    category: "Business",
     thumbGradient: "linear-gradient(135deg,#6C63FF,#8B5CF6)",
-    description: "Marketing site for a bookkeeping SaaS, paired with a technical SEO overhaul.",
-    tech: ["WordPress", "RankMath", "Custom Blocks"],
-    services: ["Technical SEO", "On-Page SEO"],
+    description: "A brand site for an architecture studio, rebuilt for speed and local search visibility.",
+    tech: ["WordPress", "PHP", "Custom Theme"],
+    services: ["WordPress Development", "Technical SEO", "Speed Optimization"],
     url: "https://example.com",
-    overview: "Ledgerline's blog had strong content but was invisible in search due to structural issues.",
-    challenge: "Missing hreflang on translated pages and an unindexed sitemap were suppressing rankings.",
-    solution: "Rebuilt the sitemap structure, corrected hreflang pairs, and resolved crawl-budget waste.",
-    seoWork: "Full technical audit covering indexing, canonicalization, and internal link structure.",
-    performance: "Indexed page count increased after resolving crawl and canonical issues."
-  },
-  {
-    id: "p5",
-    name: "Hourly.de",
-    category: "WordPress",
-    thumbGradient: "linear-gradient(135deg,#00D9FF,#6C63FF)",
-    description: "A German-language work-time calculator site with embedded interactive tools.",
-    tech: ["WordPress", "JavaScript", "RankMath"],
-    services: ["WordPress Development", "SEO", "Custom Development"],
-    url: "https://example.com",
-    overview: "A single-topic calculator site aimed at ranking for work-time and payroll search terms in German.",
-    challenge: "Embedded calculator markup was breaking page structure and colliding with theme styles.",
-    solution: "Rebuilt calculator snippets with scoped CSS prefixes and clean semantic HTML.",
-    seoWork: "On-page optimization for German search intent, plus schema for how-to style content.",
-    performance: "Resolved a mobile stacking-context bug affecting a fixed summary bar."
-  },
-  {
-    id: "p6",
-    name: "Fielder Grove",
-    category: "Landing Pages",
-    thumbGradient: "linear-gradient(135deg,#8B5CF6,#00D9FF)",
-    description: "A high-conversion landing page for a seasonal product launch.",
-    tech: ["WordPress", "Custom Blocks", "CSS"],
-    services: ["Landing Page Design", "Speed Optimization"],
-    url: "https://example.com",
-    overview: "A limited-run product launch needed a landing page that could go live in under a week.",
-    challenge: "Tight timeline with a hard requirement to keep load time under two seconds.",
-    solution: "Single-template build with inlined critical CSS and deferred non-essential scripts.",
-    seoWork: "Open Graph and schema markup set up for social and search preview accuracy.",
-    performance: "Achieved sub-2s largest contentful paint on mobile at launch."
+    overview: "Northline needed a portfolio site that could load fast on mobile and rank for local architecture searches.",
+    challenge: "The previous site ran on a heavy page builder — slow, with duplicate content issues across service pages.",
+    solution: "Rebuilt on a lightweight custom theme with a consolidated page structure and image pipeline.",
+    seoWork: "Fixed canonical conflicts, added LocalBusiness schema, restructured service pages to eliminate cannibalization.",
+    performance: "Lighthouse performance moved from the 40s into the mid-90s on mobile."
   }
 ];
 
@@ -2051,6 +2617,8 @@ const TESTIMONIALS = [
     feedback: "Delivered the landing page ahead of a tight launch window without cutting corners on performance. Communication throughout was clear and direct."
   }
 ];
+
+const DEV_CHIPS = ["WordPress", "PHP", "JavaScript", "HTML", "CSS", "MySQL", "REST API", "Git", "Shopify Designer"];
 
 const TECH_LOGOS = ["WordPress", "PHP", "JavaScript", "HTML", "CSS", "MySQL", "Git", "Google Analytics", "Search Console", "Schema.org"];
 
@@ -2104,6 +2672,77 @@ const FAQS = [
   "use strict";
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ============================================================
+     CUSTOM CURSOR
+     Only activates on fine-pointer, hover-capable devices (mouse
+     or trackpad) — never on touch screens — and never if the
+     person prefers reduced motion.
+     ============================================================ */
+  (function initCustomCursor(){
+    const isFinePointer = window.matchMedia('(pointer: fine)').matches && window.matchMedia('(hover: hover)').matches;
+    if (!isFinePointer || prefersReducedMotion) return;
+
+    const cursor = document.getElementById('customCursor');
+    const ring = cursor.querySelector('.cursor-ring');
+    const dot = cursor.querySelector('.cursor-dot');
+    if (!cursor) return;
+
+    document.documentElement.classList.add('has-custom-cursor');
+
+    // Dot tracks the pointer immediately; ring eases toward it for a
+    // soft trailing feel. Both run off one rAF loop.
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
+    let rafId = null;
+
+    function onMove(e){
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      dot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+    }
+
+    function tick(){
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      ring.style.transform = `translate(${ringX}px, ${ringY}px)`;
+      rafId = requestAnimationFrame(tick);
+    }
+
+    window.addEventListener('mousemove', onMove, { passive: true });
+    rafId = requestAnimationFrame(tick);
+
+    // Hide entirely if the pointer leaves the viewport (e.g. to the
+    // browser chrome), show again on return.
+    document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
+    document.addEventListener('mouseenter', () => { cursor.style.opacity = ''; });
+
+    // Grow the ring over anything clickable / interactive.
+    const hoverSelector = 'a, button, input, select, textarea, [role="button"], .chip, .service-card, .portfolio-card, .faq-q, [data-nav]';
+    document.addEventListener('mouseover', (e) => {
+      if (e.target.closest(hoverSelector)) cursor.classList.add('is-hovering');
+    });
+    document.addEventListener('mouseout', (e) => {
+      if (e.target.closest(hoverSelector)) cursor.classList.remove('is-hovering');
+    });
+
+    // Quick squeeze feedback on press/release.
+    document.addEventListener('mousedown', () => cursor.classList.add('is-pressed'));
+    document.addEventListener('mouseup', () => cursor.classList.remove('is-pressed'));
+
+    // If the user later changes their OS-level reduced-motion
+    // preference mid-session, stop animating and restore the
+    // native cursor rather than leaving a stray element on screen.
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener?.('change', (e) => {
+      if (e.matches){
+        cancelAnimationFrame(rafId);
+        document.documentElement.classList.remove('has-custom-cursor');
+        cursor.remove();
+      }
+    });
+  })();
 
   /* ============================================================
      HEADER: scroll state + active link highlight
@@ -2273,7 +2912,7 @@ const FAQS = [
       <div class="service-icon">${s.icon}</div>
       <h3>${s.title}</h3>
       <p>${s.desc}</p>
-      <button type="button" class="service-learn" data-scroll-target="#portfolio">Learn More <span aria-hidden="true">&rarr;</span></button>
+      <button type="button" class="service-learn" data-service-info="${s.id}">Learn More <span aria-hidden="true">&rarr;</span></button>
     `;
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
@@ -2281,16 +2920,6 @@ const FAQS = [
       card.style.setProperty('--my', ((e.clientY - rect.top) / rect.height * 100) + '%');
     });
     servicesGrid.appendChild(card);
-  });
-
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-scroll-target]');
-    if (!btn) return;
-    const target = document.querySelector(btn.getAttribute('data-scroll-target'));
-    if (!target) return;
-    const headerH = header.offsetHeight;
-    const top = target.getBoundingClientRect().top + window.scrollY - headerH + 1;
-    window.scrollTo({ top, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
   });
 
   // Re-observe dynamically added service cards for reveal
@@ -2309,21 +2938,9 @@ const FAQS = [
   }
 
   /* ============================================================
-     RENDER: PORTFOLIO + FILTERS
+     RENDER: PORTFOLIO
      ============================================================ */
-  const filterBar = document.getElementById('filterBar');
   const portfolioGrid = document.getElementById('portfolioGrid');
-
-  FILTERS.forEach((f, i) => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'filter-btn' + (i === 0 ? ' active' : '');
-    btn.textContent = f;
-    btn.setAttribute('role', 'tab');
-    btn.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
-    btn.dataset.filter = f;
-    filterBar.appendChild(btn);
-  });
 
   function renderPortfolio(){
     portfolioGrid.innerHTML = '';
@@ -2350,23 +2967,6 @@ const FAQS = [
     });
   }
   renderPortfolio();
-
-  filterBar.addEventListener('click', (e) => {
-    const btn = e.target.closest('.filter-btn');
-    if (!btn) return;
-    filterBar.querySelectorAll('.filter-btn').forEach(b => {
-      b.classList.remove('active');
-      b.setAttribute('aria-selected', 'false');
-    });
-    btn.classList.add('active');
-    btn.setAttribute('aria-selected', 'true');
-
-    const filter = btn.dataset.filter;
-    portfolioGrid.querySelectorAll('.portfolio-card').forEach(card => {
-      const match = filter === 'All' || card.dataset.category === filter;
-      card.classList.toggle('hide', !match);
-    });
-  });
 
   /* ============================================================
      LIVE PREVIEW MODAL
@@ -2493,7 +3093,64 @@ const FAQS = [
   });
 
   /* ============================================================
-     Delegated clicks: preview / detail triggers anywhere
+     SERVICE INFO MODAL (Learn More on service cards + CTA)
+     ============================================================ */
+  const serviceModal = document.getElementById('serviceModal');
+  const serviceModalContent = document.getElementById('serviceModalContent');
+  const serviceModalClose = document.getElementById('serviceModalClose');
+
+  function openServiceInfo(serviceId){
+    const meta = SERVICES.find(s => s.id === serviceId);
+    const detail = SERVICE_DETAILS[serviceId];
+    if (!detail) return;
+    const title = meta ? meta.title : 'Service';
+
+    serviceModalContent.innerHTML = `
+      <div class="service-modal-hero" style="background:${detail.gradient}">
+        <span class="service-modal-icon">${detail.icon}</span>
+      </div>
+      <div class="service-modal-body">
+        <h2 id="serviceModalTitle">${title}</h2>
+        <p class="service-modal-tagline">${detail.tagline}</p>
+
+        <div class="service-modal-section">
+          <h4><span class="sm-h-icon">&#10003;</span> What's Included</h4>
+          <ul class="service-modal-list">
+            ${detail.includes.map(item => `<li><span class="sm-check" aria-hidden="true">&#10003;</span>${item}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div class="service-modal-section">
+          <h4><span class="sm-h-icon">&#8594;</span> How It Works</h4>
+          <ol class="service-modal-steps">
+            ${detail.process.map((step, i) => `<li><span class="sm-step-num">${i + 1}</span>${step}</li>`).join('')}
+          </ol>
+        </div>
+
+        <div class="detail-actions">
+          <button type="button" class="btn btn-primary" data-service-cta-contact>Discuss This Service</button>
+        </div>
+      </div>
+    `;
+    openModal(serviceModal);
+  }
+
+  serviceModalClose.addEventListener('click', () => closeModal(serviceModal));
+
+  serviceModalContent.addEventListener('click', (e) => {
+    if (e.target.closest('[data-service-cta-contact]')){
+      closeModal(serviceModal);
+      const target = document.getElementById('contact');
+      const headerH = header.offsetHeight;
+      const top = target.getBoundingClientRect().top + window.scrollY - headerH + 1;
+      setTimeout(() => {
+        window.scrollTo({ top, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+      }, 320);
+    }
+  });
+
+  /* ============================================================
+     Delegated clicks: preview / detail / service-info triggers
      ============================================================ */
   document.addEventListener('click', (e) => {
     const previewBtn = e.target.closest('[data-preview]');
@@ -2508,12 +3165,17 @@ const FAQS = [
       if (project) openDetail(project);
       return;
     }
+    const serviceBtn = e.target.closest('[data-service-info]');
+    if (serviceBtn){
+      openServiceInfo(serviceBtn.dataset.serviceInfo);
+      return;
+    }
   });
 
   /* ============================================================
      Modal shared behavior: overlay click + Escape + focus trap
      ============================================================ */
-  [previewModal, detailModal].forEach(overlay => {
+  [previewModal, detailModal, serviceModal].forEach(overlay => {
     overlay.addEventListener('mousedown', (e) => {
       if (e.target === overlay){
         if (overlay === previewModal) previewIframe.src = 'about:blank';
@@ -2602,6 +3264,17 @@ const FAQS = [
   const marqueeHtml = TECH_LOGOS.map(t => `<span>${t}</span>`).join('');
   marquee1.innerHTML = marqueeHtml;
   marquee2.innerHTML = marqueeHtml;
+
+  /* ============================================================
+     DEV SKILLS MARQUEE (Development column, sliding chips)
+     ============================================================ */
+  const devChipTrack1 = document.getElementById('devChipTrack1');
+  const devChipTrack2 = document.getElementById('devChipTrack2');
+  if (devChipTrack1 && devChipTrack2){
+    const devChipHtml = DEV_CHIPS.map(t => `<span class="chip">${t}</span>`).join('');
+    devChipTrack1.innerHTML = devChipHtml;
+    devChipTrack2.innerHTML = devChipHtml;
+  }
 
   /* ============================================================
      CASE STUDIES
@@ -2699,6 +3372,59 @@ const FAQS = [
     showToast('Message sent — I\u2019ll be in touch soon.');
     contactForm.reset();
   });
+
+  /* ============================================================
+     THEME TOGGLE (dark / light, persisted)
+     ============================================================ */
+  (function initThemeToggle(){
+    const STORAGE_KEY = 'ma-theme-preference';
+    const root = document.documentElement;
+    const toggleBtns = [document.getElementById('themeToggle'), document.getElementById('themeToggleMobile')]
+      .filter(Boolean);
+    const mobileLabel = document.querySelector('.theme-toggle-mobile .theme-toggle-label');
+
+    function getStoredTheme(){
+      try { return localStorage.getItem(STORAGE_KEY); } catch (err) { return null; }
+    }
+    function storeTheme(theme){
+      try { localStorage.setItem(STORAGE_KEY, theme); } catch (err) { /* storage unavailable — theme just won't persist */ }
+    }
+
+    const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    let theme = getStoredTheme() || (systemPrefersLight ? 'light' : 'dark');
+
+    function applyTheme(next){
+      theme = next;
+      if (theme === 'light'){
+        root.setAttribute('data-theme', 'light');
+      } else {
+        root.removeAttribute('data-theme');
+      }
+      const isLight = theme === 'light';
+      toggleBtns.forEach(btn => {
+        btn.setAttribute('aria-pressed', String(isLight));
+        btn.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
+      });
+      if (mobileLabel) mobileLabel.textContent = isLight ? 'Switch to Dark Mode' : 'Switch to Light Mode';
+    }
+
+    applyTheme(theme);
+
+    toggleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        applyTheme(theme === 'light' ? 'dark' : 'light');
+        storeTheme(theme);
+      });
+    });
+
+    // Follow the OS setting live only until the person makes an explicit
+    // choice of their own — once they do, their choice always wins.
+    const colorSchemeQuery = window.matchMedia('(prefers-color-scheme: light)');
+    colorSchemeQuery.addEventListener?.('change', (e) => {
+      if (getStoredTheme()) return;
+      applyTheme(e.matches ? 'light' : 'dark');
+    });
+  })();
 
   /* ============================================================
      FOOTER YEAR
