@@ -79,30 +79,78 @@
    site without touching individual component rules.
    ============================================================ */
 [data-theme="light"]{
-  --bg: #F6F7FB;
-  --bg-2: #ECEEF6;
-  --card: rgba(15,20,35,0.04);
-  --card-border: rgba(15,20,35,0.10);
-  --text: #12141C;
-  --text-soft: #565F72;
-  --accent: #5B4FE0;
-  --accent-2: #0091AD;
+  --bg: #FAFAFA;
+  --bg-2: #F1F2F6;
+  --card: rgba(20,24,38,0.035);
+  --card-border: rgba(20,24,38,0.09);
+  --text: #14161F;
+  --text-soft: #5B6272;
+  --accent: #4338CA;
+  --accent-2: #0F766E;
   --highlight: #7C3AED;
-  --grad-soft: linear-gradient(120deg, rgba(91,79,224,0.12), rgba(0,145,173,0.10));
+  --grad-soft: linear-gradient(120deg, rgba(67,56,202,0.10), rgba(15,118,110,0.08));
 }
 [data-theme="light"] .grid-pattern,
 [data-theme="light"] .about-shape-grid,
 [data-theme="light"] .footer-grid-pattern{
   opacity: 0.5;
 }
-[data-theme="light"] .glow{ opacity: 0.16; }
-[data-theme="light"] .code-panel{ color: #4b5163; }
+[data-theme="light"] .glow{ opacity: 0.14; }
 [data-theme="light"] .btn-primary{ color: #ffffff; }
 [data-theme="light"] .logo-mark,
 [data-theme="light"] .logo-dot{ color: #ffffff; }
 [data-theme="light"] .stat-number{ color: transparent; }
 [data-theme="light"] ::selection{ background: var(--accent); color: #fff; }
 [data-theme="light"] .modal-frame-wrap{ background: #fff; }
+
+/* Header no longer bleeds a dark bar over a light page */
+[data-theme="light"] .site-header.scrolled{
+  background: rgba(255,255,255,0.82);
+  border-bottom-color: rgba(20,24,38,0.08);
+}
+[data-theme="light"] .mobile-nav{
+  background: rgba(255,255,255,0.98);
+  border-bottom-color: rgba(20,24,38,0.08);
+}
+
+/* Hero code mockup stays a dark "editor" panel in both themes */
+[data-theme="light"] .browser-mock{
+  background: #10141f;
+  border-color: rgba(255,255,255,0.08);
+}
+[data-theme="light"] .browser-bar{
+  background: rgba(255,255,255,0.04);
+  border-bottom-color: rgba(255,255,255,0.08);
+}
+[data-theme="light"] .browser-url{
+  background: rgba(255,255,255,0.06);
+  color: #9aa3b8;
+}
+[data-theme="light"] .code-panel{ color: #9aa3b8; }
+[data-theme="light"] .seo-graph{
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.08);
+}
+[data-theme="light"] .float-card{
+  background: rgba(16,20,31,0.92);
+  border-color: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+/* Modal close buttons were invisible on light modal backgrounds */
+[data-theme="light"] .modal-close{ background: rgba(20,24,38,0.06); }
+[data-theme="light"] .modal-close:hover{ background: rgba(20,24,38,0.12); }
+
+/* Contact form dropdown was hardcoded to a dark theme */
+[data-theme="light"] .form-row select{
+  color-scheme: light;
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1L6 6L11 1' stroke='%230F766E' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+}
+[data-theme="light"] .form-row select option{
+  background-color: #ffffff;
+  color: var(--text);
+}
 
 
 *, *::before, *::after{ box-sizing: border-box; }
