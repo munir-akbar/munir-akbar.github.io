@@ -3061,10 +3061,14 @@ const FAQS = [
     const closeBtn = overlay.querySelector('.modal-close');
     if (closeBtn) closeBtn.focus();
   }
-  function closeModal(overlay){
+  function closeModal(overlay, immediate){
     overlay.classList.remove('show');
     document.body.style.overflow = '';
-    setTimeout(() => { overlay.hidden = true; }, 300);
+    if (immediate){
+      overlay.hidden = true;
+    } else {
+      setTimeout(() => { overlay.hidden = true; }, 300);
+    }
     if (lastFocusedEl) lastFocusedEl.focus();
   }
 
@@ -3262,7 +3266,14 @@ const FAQS = [
     const previewBtn = e.target.closest('[data-preview]');
     if (previewBtn){
       const project = PROJECTS.find(p => p.id === previewBtn.dataset.preview);
-      if (project) openPreview(project);
+      if (project){
+        // The "View Live Website" button inside the project detail
+        // popup also carries data-preview. If that popup is open,
+        // close it first so the preview opens cleanly on its own
+        // instead of stacking behind/on top of the detail modal.
+        if (!detailModal.hidden) closeModal(detailModal, true);
+        openPreview(project);
+      }
       return;
     }
     const detailBtn = e.target.closest('[data-detail]');
