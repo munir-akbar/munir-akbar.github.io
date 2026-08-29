@@ -1090,8 +1090,7 @@ section{ padding: 64px 0; position: relative; }
   line-height: 1.5;
   margin-bottom: 22px;
 }
-.t-name{ font-weight: 700; font-size: 0.95rem; }
-.t-role{ font-size: 0.82rem; color: var(--text-soft); margin: 0; }
+.t-name{ font-weight: 700; font-size: 0.95rem; margin: 0; }
 
 .carousel-controls{
   display: flex;
@@ -3352,7 +3351,6 @@ const FAQS = [
       <div class="t-stars" aria-label="${t.rating} out of 5 stars">${'&#9733;'.repeat(t.rating)}${'&#9734;'.repeat(5 - t.rating)}</div>
       <p class="t-feedback">&ldquo;${t.feedback}&rdquo;</p>
       <p class="t-name">${t.name}</p>
-      <p class="t-role">${t.role}</p>
     `;
     testimonialTrack.appendChild(slide);
 
