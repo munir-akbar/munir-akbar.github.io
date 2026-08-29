@@ -945,30 +945,6 @@ section{ padding: 64px 0; position: relative; }
 }
 .chip:hover{ border-color: var(--accent); color: var(--text); }
 
-.chip-marquee{
-  overflow: hidden;
-  display: flex;
-  width: 100%;
-  min-width: 0;
-  margin: 0 -28px;
-  padding: 0 28px;
-  mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
-}
-.chip-marquee-track{
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0;
-  padding-right: 8px;
-  min-width: max-content;
-  animation: chipmarquee 22s linear infinite;
-}
-.skill-col:hover .chip-marquee-track{ animation-play-state: paused; }
-@keyframes chipmarquee{
-  from{ transform: translateX(0); }
-  to{ transform: translateX(-100%); }
-}
-
 /* ============================================================
    WORKFLOW
    ============================================================ */
@@ -1145,6 +1121,34 @@ section{ padding: 64px 0; position: relative; }
 }
 .dot-item.active{ background: var(--accent-2); transform: scale(1.3); }
 
+/* ============================================================
+   MARQUEE
+   ============================================================ */
+.marquee-section{
+  padding: 46px 0;
+  overflow: hidden;
+  border-top: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border);
+}
+.marquee-track{ display: flex; width: max-content; animation: marquee 32s linear infinite; }
+.marquee-section:hover .marquee-track{ animation-play-state: paused; }
+.marquee-content{
+  display: flex;
+  gap: 50px;
+  padding-right: 50px;
+  align-items: center;
+}
+.marquee-content span{
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--text-soft);
+  white-space: nowrap;
+  opacity: 0.7;
+}
+@keyframes marquee{
+  from{ transform: translateX(0); }
+  to{ transform: translateX(-50%); }
+}
 
 /* ============================================================
    CASE STUDIES
@@ -1516,13 +1520,23 @@ section{ padding: 64px 0; position: relative; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 18px;
+  gap: 10px;
   background: var(--bg-2);
   color: var(--text);
   text-align: center;
-  padding: 24px;
+  padding: 40px 32px;
 }
-.iframe-fallback p{ color: var(--text-soft); }
+.fallback-icon{
+  width: 64px; height: 64px;
+  border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+  box-shadow: 0 16px 34px -14px rgba(0,0,0,0.5);
+}
+.fallback-title{ font-size: 1.15rem; margin-bottom: 0.2em; }
+.fallback-text{ color: var(--text-soft); max-width: 420px; font-size: 0.92rem; margin-bottom: 10px; }
+.fallback-actions{ display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
 
 /* Detail modal */
 .detail-window{ max-width: 760px; position: relative; padding: 0; }
@@ -1589,7 +1603,7 @@ section{ padding: 64px 0; position: relative; }
   color: #fff;
   box-shadow: 0 14px 34px -10px rgba(0,0,0,0.5);
 }
-.service-modal-body{ padding: 34px 36px 36px; overflow-y: auto; min-height: 0; flex: 1; }
+.service-modal-body{ padding: 34px 36px 36px; overflow-y: auto; flex: 1; min-height: 0; }
 .service-modal-body h2{ font-size: 1.5rem; margin-bottom: 0.3em; }
 .service-modal-tagline{ font-size: 0.98rem; margin-bottom: 1.6em; }
 .service-modal-section{ margin-bottom: 24px; }
@@ -1981,9 +1995,9 @@ section{ padding: 64px 0; position: relative; }
 
     <div class="skills-columns">
       <div class="skill-col reveal">
-  <h3 class="skill-col-title">Development</h3>
-  <div class="chip-row" id="devChipRow"></div>
-</div>
+        <h3 class="skill-col-title">Development</h3>
+        <div class="chip-row" id="devChipRow"></div>
+      </div>
       <div class="skill-col reveal">
         <h3 class="skill-col-title">SEO</h3>
         <div class="chip-row">
@@ -2135,7 +2149,13 @@ section{ padding: 64px 0; position: relative; }
   </div>
 </section>
 
-
+<!-- ================= TECH MARQUEE ================= -->
+<section class="marquee-section" aria-label="Technologies used">
+  <div class="marquee-track">
+    <div class="marquee-content" id="marqueeContent1"></div>
+    <div class="marquee-content" id="marqueeContent2" aria-hidden="true"></div>
+  </div>
+</section>
 
 <!-- ================= CASE STUDIES ================= -->
 <section class="casestudy-section" aria-labelledby="casestudy-heading">
@@ -2297,8 +2317,12 @@ section{ padding: 64px 0; position: relative; }
     <div class="modal-frame-wrap">
       <iframe id="previewIframe" title="Live website preview" loading="lazy"></iframe>
       <div class="iframe-fallback" id="iframeFallback" hidden>
-        <p>This website doesn't allow embedded previews.</p>
-        <a href="#" id="fallbackOpenLink" class="btn btn-primary" target="_blank" rel="noopener">Open Website in New Tab</a>
+        <div class="fallback-icon" id="fallbackIcon" aria-hidden="true"></div>
+        <h3 class="fallback-title" id="fallbackTitle">Opening live preview&hellip;</h3>
+        <p class="fallback-text">This site keeps embedded previews switched off for security, so its live preview opens in its own window instead — right where you can see it working.</p>
+        <div class="fallback-actions">
+          <a href="#" id="fallbackOpenLink" class="btn btn-primary" target="_blank" rel="noopener">Reopen Live Preview</a>
+        </div>
       </div>
     </div>
   </div>
@@ -2979,11 +3003,11 @@ const FAQS = [
       card.className = 'portfolio-card reveal in-view';
       card.dataset.category = p.category;
       card.innerHTML = `
-  <div class="portfolio-thumb" style="background:${p.thumbGradient}">
-    <div class="portfolio-thumb-inner">
-      <span class="portfolio-thumb-icon" aria-hidden="true">${p.thumbIcon || ''}</span>
-      ${p.name}
-    </div>
+        <div class="portfolio-thumb" style="background:${p.thumbGradient}">
+          <div class="portfolio-thumb-inner">
+            <span class="portfolio-thumb-icon" aria-hidden="true">${p.thumbIcon || ''}</span>
+            ${p.name}
+          </div>
           <div class="portfolio-overlay">
             <button type="button" class="thumb-btn thumb-btn-preview" data-preview="${p.id}">Live Preview</button>
             <button type="button" class="thumb-btn thumb-btn-view" data-detail="${p.id}">View Details</button>
@@ -3003,16 +3027,31 @@ const FAQS = [
 
   /* ============================================================
      LIVE PREVIEW MODAL
+
+     Some sites (this one's own portfolio subjects included) send
+     X-Frame-Options / CSP frame-ancestors headers that block ANY
+     page — including this one — from embedding them in an iframe.
+     That's enforced by the browser itself for the target site's
+     security, so no client-side code can force the embed to work.
+
+     When that happens, instead of leaving a dead-end message we
+     open the live site in a real, separate popup window sized and
+     positioned like a floating preview, so the person still gets
+     an actual live look at the site with no extra typing or
+     copy-pasting a URL themselves.
      ============================================================ */
   const previewModal = document.getElementById('previewModal');
   const previewIframe = document.getElementById('previewIframe');
   const previewModalUrl = document.getElementById('previewModalUrl');
   const previewModalClose = document.getElementById('previewModalClose');
   const iframeFallback = document.getElementById('iframeFallback');
+  const fallbackIcon = document.getElementById('fallbackIcon');
+  const fallbackTitle = document.getElementById('fallbackTitle');
   const fallbackOpenLink = document.getElementById('fallbackOpenLink');
 
   let lastFocusedEl = null;
   let iframeLoadTimer = null;
+  let popupCheckTimer = null;
 
   function openModal(overlay){
     lastFocusedEl = document.activeElement;
@@ -3029,38 +3068,72 @@ const FAQS = [
     if (lastFocusedEl) lastFocusedEl.focus();
   }
 
+  // Opens the project's live site in an actual separate browser
+  // window (not a new tab lost among others), sized and centered
+  // like a floating preview so it reads as part of the same flow.
+  function openLivePopup(url){
+    const width = Math.min(1180, Math.round(window.screen.availWidth * 0.85));
+    const height = Math.min(820, Math.round(window.screen.availHeight * 0.85));
+    const left = Math.round((window.screen.availWidth - width) / 2 + (window.screen.availLeft || 0));
+    const top = Math.round((window.screen.availHeight - height) / 2 + (window.screen.availTop || 0));
+    const features = `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=yes,status=no`;
+    const win = window.open(url, '_blank', features);
+    // Popup blockers can silently return null even with a user
+    // gesture behind the click in some browser configurations —
+    // if so, the visible "Reopen Live Preview" link still works
+    // since it's a normal user-activated anchor click.
+    return win;
+  }
+
   function openPreview(project){
+    clearTimeout(iframeLoadTimer);
+    clearInterval(popupCheckTimer);
+
     iframeFallback.hidden = true;
     previewIframe.hidden = false;
     previewModalUrl.textContent = project.url.replace(/^https?:\/\//, '');
     fallbackOpenLink.href = project.url;
+    fallbackIcon.style.background = project.thumbGradient || 'var(--grad)';
+    fallbackIcon.innerHTML = `<span aria-hidden="true">${project.thumbIcon || ''}</span>`;
     previewIframe.src = project.url;
 
-    clearTimeout(iframeLoadTimer);
     let loaded = false;
     previewIframe.onload = () => { loaded = true; };
-    // Many real-world sites block embedding via X-Frame-Options/CSP; onload can still
-    // fire for a blocked frame, so we treat a lack of same-origin readiness as a proxy
-    // and give a generous grace period, then fall back gracefully either way.
+
+    // Many real-world sites block embedding via X-Frame-Options/CSP.
+    // A blocked frame can still fire onload (it loads an empty/error
+    // document), so onload alone can't prove the embed worked — but
+    // giving it a short grace period first means sites that DO allow
+    // framing still get to show inline before we assume the worst.
     iframeLoadTimer = setTimeout(() => {
-      try {
-        // Accessing contentWindow.location on a blocked cross-origin frame is fine (no throw),
-        // but a same-origin check can't reliably prove success. We rely on onload + timeout.
-        if (!loaded){
-          iframeFallback.hidden = false;
-          previewIframe.hidden = true;
-        }
-      } catch (err){
-        iframeFallback.hidden = false;
-        previewIframe.hidden = true;
+      fallbackTitle.textContent = 'Opening live preview\u2026';
+      iframeFallback.hidden = false;
+      previewIframe.hidden = true;
+
+      const win = openLivePopup(project.url);
+      if (win){
+        fallbackTitle.textContent = 'Live preview opened in a new window';
+        // If the person closes that popup while this modal is still
+        // open, offer the reopen link again rather than leaving a
+        // now-stale "opened" message on screen.
+        popupCheckTimer = setInterval(() => {
+          if (win.closed){
+            fallbackTitle.textContent = 'Preview window closed';
+            clearInterval(popupCheckTimer);
+          }
+        }, 700);
+      } else {
+        fallbackTitle.textContent = 'Your browser blocked the preview popup';
       }
-    }, 3500);
+    }, 1200);
 
     openModal(previewModal);
   }
 
   previewModalClose.addEventListener('click', () => {
     previewIframe.src = 'about:blank';
+    clearTimeout(iframeLoadTimer);
+    clearInterval(popupCheckTimer);
     closeModal(previewModal);
   });
 
@@ -3211,13 +3284,21 @@ const FAQS = [
   [previewModal, detailModal, serviceModal].forEach(overlay => {
     overlay.addEventListener('mousedown', (e) => {
       if (e.target === overlay){
-        if (overlay === previewModal) previewIframe.src = 'about:blank';
+        if (overlay === previewModal){
+          previewIframe.src = 'about:blank';
+          clearTimeout(iframeLoadTimer);
+          clearInterval(popupCheckTimer);
+        }
         closeModal(overlay);
       }
     });
     overlay.addEventListener('keydown', (e) => {
       if (e.key === 'Escape'){
-        if (overlay === previewModal) previewIframe.src = 'about:blank';
+        if (overlay === previewModal){
+          previewIframe.src = 'about:blank';
+          clearTimeout(iframeLoadTimer);
+          clearInterval(popupCheckTimer);
+        }
         closeModal(overlay);
         return;
       }
@@ -3290,12 +3371,21 @@ const FAQS = [
   resetAutoplay();
 
   /* ============================================================
+     TECH MARQUEE
+     ============================================================ */
+  const marquee1 = document.getElementById('marqueeContent1');
+  const marquee2 = document.getElementById('marqueeContent2');
+  const marqueeHtml = TECH_LOGOS.map(t => `<span>${t}</span>`).join('');
+  marquee1.innerHTML = marqueeHtml;
+  marquee2.innerHTML = marqueeHtml;
+
+  /* ============================================================
      DEV SKILLS MARQUEE (Development column, sliding chips)
      ============================================================ */
- const devChipRow = document.getElementById('devChipRow');
-if (devChipRow){
-  devChipRow.innerHTML = DEV_CHIPS.map(t => `<span class="chip">${t}</span>`).join('');
-}
+  const devChipRow = document.getElementById('devChipRow');
+  if (devChipRow){
+    devChipRow.innerHTML = DEV_CHIPS.map(t => `<span class="chip">${t}</span>`).join('');
+  }
 
   /* ============================================================
      CASE STUDIES
